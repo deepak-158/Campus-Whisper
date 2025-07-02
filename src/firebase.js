@@ -3,16 +3,16 @@ import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 
 // Your web app's Firebase configuration
-// Updated with new project: vit-chitchat-36032-2bcd8
+// Using environment variables for security
 const firebaseConfig = {
-  apiKey: "AIzaSyAw6GBZSl4lGBWwP8Vs6wpIjbWKcnNQg-s",
-  authDomain: "vit-chitchat-36032-2bcd8.firebaseapp.com",
-  databaseURL: "https://vit-chitchat-36032-2bcd8-default-rtdb.firebaseio.com/",
-  projectId: "vit-chitchat-36032-2bcd8",
-  storageBucket: "vit-chitchat-36032-2bcd8.firebasestorage.app",
-  messagingSenderId: "537094480399",
-  appId: "1:537094480399:web:59b35ca43a228330ca797a",
-  measurementId: "G-D2Z8KW7RP6"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase

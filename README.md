@@ -63,18 +63,24 @@ npm install
 5. Copy the sacred configuration keys
 
 **Breathe Life into the Code:**
-Open `src/firebase.js` and replace the placeholder with your real configuration:
+Create a `.env` file in your project root and add your Firebase configuration:
 
-```javascript
-const firebaseConfig = {
-  apiKey: "your-actual-api-key-goes-here",
-  authDomain: "your-project.firebaseapp.com", 
-  databaseURL: "https://your-project-default-rtdb.firebaseio.com/",
-  projectId: "your-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "your-sender-id",
-  appId: "your-app-id"
-};
+```bash
+# Copy .env.example to .env
+cp .env.example .env
+```
+
+Then fill in your actual Firebase values in the `.env` file:
+
+```bash
+VITE_FIREBASE_API_KEY=your-actual-api-key-goes-here
+VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+VITE_FIREBASE_DATABASE_URL=https://your-project-default-rtdb.firebaseio.com/
+VITE_FIREBASE_PROJECT_ID=your-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-project.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
+VITE_FIREBASE_APP_ID=your-app-id
+VITE_FIREBASE_MEASUREMENT_ID=your-measurement-id
 ```
 
 **Create the Digital Sanctuary:**
