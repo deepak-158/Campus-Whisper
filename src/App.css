@@ -1,0 +1,1317 @@
+/* Versacc AI Chat - Modern Dark Theme */
+
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #0a0a0a;
+  color: #ffffff;
+}
+
+#root {
+  height: 100%;
+}
+
+/* CSS Variables - Versacc Inspired */
+:root {
+  /* Backgrounds */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #111111;
+  --bg-tertiary: #1a1a1a;
+  --bg-glass: rgba(26, 26, 26, 0.8);
+  --bg-hover: rgba(255, 255, 255, 0.05);
+  --bg-active: rgba(255, 255, 255, 0.1);
+  
+  /* Sidebar */
+  --sidebar-bg: rgba(15, 15, 15, 0.95);
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #d1d5db;
+  --text-muted: #6b7280;
+  --text-accent: #dc2626;
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%);
+  --gradient-secondary: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+  --gradient-accent: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+  --gradient-purple: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  
+  /* Borders */
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-focus: rgba(220, 38, 38, 0.5);
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px rgba(220, 38, 38, 0.3);
+  
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Main App Container */
+.app {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background: var(--bg-primary);
+  overflow: hidden;
+  position: relative;
+}
+
+/* When showing username setup, override the flex layout */
+.app:has(.username-setup) {
+  display: block;
+}
+
+/* Username Setup Screen */
+.username-setup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  min-height: 100vh;
+  padding: clamp(0.75rem, 3vw, 1.5rem);
+  background: var(--gradient-primary);
+  color: white;
+  text-align: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.username-setup::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 30% 40%, rgba(220, 38, 38, 0.3), transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(185, 28, 28, 0.3), transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(127, 29, 29, 0.2), transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(153, 27, 27, 0.2), transparent 40%);
+  z-index: 1;
+  animation: float 20s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-20px) rotate(2deg); }
+  66% { transform: translateY(10px) rotate(-1deg); }
+}
+
+.username-setup h1 {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  z-index: 2;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.username-setup p {
+  font-size: clamp(0.9rem, 2.5vw, 1.25rem);
+  opacity: 0.9;
+  margin-bottom: clamp(1.5rem, 4vh, 2.5rem);
+  font-weight: 400;
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+/* Firebase Debug Styles */
+.firebase-debug {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-lg);
+  padding: clamp(1rem, 2vw, 1.5rem);
+  margin-bottom: clamp(1rem, 3vh, 2rem);
+  backdrop-filter: blur(20px);
+  position: relative;
+  z-index: 2;
+  max-width: min(600px, 90vw);
+  width: 100%;
+  font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+}
+
+.firebase-debug > div {
+  margin-bottom: 0.5rem;
+  font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+}
+
+.firebase-debug > div:last-child {
+  margin-bottom: 0;
+}
+
+.setup-instructions {
+  text-align: left;
+  margin-top: 1rem;
+}
+
+.setup-instructions h4 {
+  margin-bottom: 0.5rem;
+  color: #fbbf24;
+  font-size: clamp(0.9rem, 1.8vw, 1rem);
+}
+
+.setup-instructions ol {
+  padding-left: 1.5rem;
+}
+
+.setup-instructions li {
+  margin-bottom: 0.25rem;
+  font-size: clamp(0.75rem, 1.5vw, 0.85rem);
+  line-height: 1.4;
+}
+
+.setup-instructions a {
+  color: #60a5fa;
+  text-decoration: underline;
+}
+
+.username-form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.75rem, 2vh, 1.25rem);
+  max-width: min(500px, 90vw);
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.username-form input {
+  padding: clamp(0.75rem, 2vw, 1rem) clamp(1rem, 3vw, 1.5rem);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(20px);
+  text-align: center;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.username-form input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 400;
+}
+
+.username-form input:focus {
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.username-form button {
+  padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2rem);
+  border: none;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.01em;
+}
+
+.username-form button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.username-form button:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.username-form button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-xl);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.username-form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Sidebar - Versacc Style */
+.sidebar {
+  width: min(380px, 25vw);
+  min-width: 280px;
+  max-width: 400px;
+  height: 100vh;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 100;
+  backdrop-filter: blur(20px);
+  flex-shrink: 0;
+}
+
+.sidebar.closed {
+  transform: translateX(-100%);
+}
+
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 99;
+  display: none;
+  backdrop-filter: blur(4px);
+}
+
+/* User Info Section */
+.user-info {
+  padding: 2rem 1.5rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+  flex-shrink: 0;
+}
+
+.user-info h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.change-username {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.change-username:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-focus);
+  transform: translateY(-1px);
+  color: var(--text-primary);
+}
+
+.firebase-status {
+  font-size: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  text-align: center;
+}
+
+.firebase-status.connecting {
+  background: var(--gradient-secondary);
+  color: white;
+  animation: pulse 2s infinite;
+}
+
+.firebase-status.connected {
+  background: var(--gradient-accent);
+  color: white;
+  box-shadow: var(--shadow-glow);
+}
+
+.firebase-status.failed {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+/* Room Creation Section */
+.room-creation {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.room-creation h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.create-room-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.create-room-form input {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.create-room-form input::placeholder {
+  color: var(--text-muted);
+}
+
+.create-room-form input:focus {
+  border-color: var(--border-focus);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-1px);
+}
+
+.create-room-form button {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--gradient-accent);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.create-room-form button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.create-room-form button:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.create-room-form button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.create-room-form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Rooms List */
+.rooms-list {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  min-height: 0; /* Important for flex container */
+}
+
+.rooms-list h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.no-rooms {
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  padding: 2rem 1rem;
+  font-size: 0.875rem;
+}
+
+.room-item {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.room-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--gradient-accent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.room-item:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-focus);
+  transform: translateX(4px);
+  color: var(--text-primary);
+}
+
+.room-item:hover::before {
+  opacity: 0.1;
+}
+
+.room-item.active {
+  background: rgba(220, 38, 38, 0.15);
+  border-color: var(--text-accent);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-glow);
+}
+
+.room-item.active::before {
+  opacity: 0.2;
+}
+
+/* Chat Area */
+.chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  background: var(--bg-secondary);
+  position: relative;
+  min-width: 0;
+}
+
+/* Chat Header */
+.chat-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: var(--bg-glass);
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: blur(20px);
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.hamburger-menu {
+  display: none;
+  flex-direction: column;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-right: 1rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.3s ease;
+}
+
+.hamburger-menu span {
+  width: 20px;
+  height: 2px;
+  background: var(--text-primary);
+  margin: 2px 0;
+  transition: all 0.3s ease;
+  border-radius: 1px;
+}
+
+.hamburger-menu:hover {
+  background: var(--bg-hover);
+}
+
+.room-info {
+  flex: 1;
+}
+
+.room-info h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.room-status {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.toggle-sidebar {
+  background: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+}
+
+.toggle-sidebar:hover {
+  background: var(--bg-active);
+  border-color: var(--border-focus);
+  color: var(--text-primary);
+}
+
+/* Messages Container */
+.messages-container {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  background: var(--bg-secondary);
+  position: relative;
+  min-height: 0; /* Important for flex container */
+}
+
+.messages-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(220, 38, 38, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(185, 28, 28, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.no-messages {
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 4rem 2rem;
+  font-size: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Message Styling */
+.message {
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+  max-width: 70%;
+  animation: messageSlide 0.3s ease-out;
+}
+
+@keyframes messageSlide {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message.own-message {
+  margin-left: auto;
+}
+
+.message-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.username {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-accent);
+}
+
+.own-message .username {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.timestamp {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.message-text {
+  background: var(--bg-glass);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-lg);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+}
+
+.message-text::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  pointer-events: none;
+}
+
+.own-message .message-text {
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.2) 0%, rgba(185, 28, 28, 0.1) 100%);
+  border-color: rgba(220, 38, 38, 0.3);
+}
+
+/* Message Input */
+.message-input {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--bg-glass);
+  border-top: 1px solid var(--border-color);
+  backdrop-filter: blur(20px);
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.message-input input {
+  flex: 1;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.message-input input::placeholder {
+  color: var(--text-muted);
+}
+
+.message-input input:focus {
+  border-color: var(--border-focus);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-1px);
+}
+
+.message-input button {
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--gradient-accent);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  min-width: 80px;
+}
+
+.message-input button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.message-input button:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.message-input button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.message-input button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.message-input button::after {
+  content: '→';
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* No Room Selected */
+.no-room-selected {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+  text-align: center;
+  background: var(--bg-secondary);
+  position: relative;
+  flex: 1;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+.no-room-selected::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 30% 40%, rgba(220, 38, 38, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 80% 20%, rgba(185, 28, 28, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 20% 80%, rgba(127, 29, 29, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.no-room-selected .hamburger-menu {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 10;
+}
+
+.welcome-content {
+  position: relative;
+  z-index: 1;
+  max-width: min(600px, 85vw);
+  padding: 2rem 1.5rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.welcome-content h2 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.3;
+  animation: float 6s ease-in-out infinite;
+}
+
+.welcome-content p {
+  font-size: clamp(0.95rem, 2vw, 1.125rem);
+  color: var(--text-secondary);
+  line-height: 1.5;
+  max-width: 500px;
+  margin-bottom: 1.5rem;
+}
+
+/* Add some visual elements to make the homepage more engaging */
+.welcome-content::after {
+  content: '';
+  width: 100px;
+  height: 4px;
+  background: var(--gradient-accent);
+  border-radius: 2px;
+  margin-top: 1rem;
+}
+
+/* Responsive Design */
+
+/* Large Desktop - More space for sidebar */
+@media (min-width: 1400px) {
+  .sidebar {
+    width: min(420px, 28vw);
+  }
+  
+  .messages-container {
+    padding: 2rem 3rem;
+  }
+  
+  .message-input {
+    padding: 1.5rem 3rem;
+  }
+  
+  .chat-header {
+    padding: 1.5rem 3rem;
+  }
+  
+  .welcome-content {
+    max-width: min(700px, 80vw);
+    padding: 2.5rem 2rem;
+  }
+  
+  .welcome-content h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: 1rem;
+  }
+  
+  .welcome-content p {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    margin-bottom: 2rem;
+  }
+}
+
+/* Desktop optimization */
+@media (min-width: 1024px) {
+  .sidebar {
+    width: min(380px, 25vw);
+  }
+  
+  .toggle-sidebar {
+    display: none;
+  }
+  
+  .hamburger-menu {
+    display: none !important;
+  }
+  
+  .username-setup {
+    padding: clamp(1.5rem, 4vh, 3rem);
+  }
+  
+  .username-setup h1 {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    margin-bottom: 1.25rem;
+  }
+  
+  .username-setup p {
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    margin-bottom: clamp(2rem, 5vh, 3rem);
+  }
+  
+  .firebase-debug {
+    max-width: min(650px, 80vw);
+    padding: clamp(1.25rem, 3vw, 2rem);
+    margin-bottom: clamp(1.5rem, 4vh, 2.5rem);
+  }
+  
+  .username-form {
+    max-width: min(550px, 80vw);
+    gap: clamp(1rem, 3vh, 1.5rem);
+  }
+  
+  .username-form input {
+    padding: clamp(1rem, 3vw, 1.25rem) clamp(1.5rem, 4vw, 2rem);
+    font-size: clamp(1rem, 2.5vw, 1.125rem);
+  }
+  
+  .username-form button {
+    padding: clamp(1rem, 3vw, 1.25rem) clamp(2rem, 5vw, 2.5rem);
+    font-size: clamp(1rem, 2.5vw, 1.125rem);
+  }
+}
+
+/* Tablet adjustments */
+@media (max-width: 1023px) and (min-width: 769px) {
+  .sidebar {
+    width: min(350px, 35vw);
+  }
+  
+  .hamburger-menu {
+    display: none !important;
+  }
+}
+
+/* Mobile and small tablet */
+@media (max-width: 768px) {
+  .app {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .hamburger-menu {
+    display: flex !important;
+  }
+  
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: min(320px, 85vw);
+    min-width: 280px;
+    max-width: 350px;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-xl);
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .sidebar-overlay {
+    display: block !important;
+    z-index: 999;
+  }
+  
+  .toggle-sidebar {
+    display: none;
+  }
+  
+  .chat-area {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+  }
+  
+  .chat-header {
+    padding: 1rem;
+    flex-shrink: 0;
+  }
+  
+  .messages-container {
+    flex: 1;
+    padding: 1rem;
+    height: calc(100vh - 140px);
+    overflow-y: auto;
+  }
+  
+  .message-input {
+    padding: 1rem;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+  
+  .message {
+    max-width: 85%;
+  }
+  
+  .username-setup {
+    padding: 1rem;
+    height: 100vh;
+  }
+  
+  .username-setup h1 {
+    font-size: clamp(1.5rem, 5vw, 2.25rem);
+    margin-bottom: 0.75rem;
+  }
+  
+  .username-setup p {
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    margin-bottom: 1.5rem;
+  }
+  
+  .username-form {
+    max-width: 95vw;
+    gap: 0.75rem;
+  }
+  
+  .username-form input {
+    padding: 0.75rem 1rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.9rem);
+  }
+  
+  .username-form button {
+    padding: 0.75rem 1.25rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.9rem);
+  }
+  
+  .firebase-debug {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    max-width: 95vw;
+  }
+  
+  .no-room-selected {
+    height: 100vh;
+    padding: 1rem;
+  }
+  
+  .no-room-selected .hamburger-menu {
+    top: 1rem;
+    left: 1rem;
+  }
+  
+  .welcome-content {
+    padding: 1.5rem 1rem;
+    max-width: 90vw;
+  }
+  
+  .welcome-content h2 {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+  }
+  
+  .welcome-content p {
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+  }
+}
+
+/* Small mobile phones */
+@media (max-width: 480px) {
+  .sidebar {
+    width: min(300px, 90vw);
+    min-width: 260px;
+  }
+  
+  .chat-header {
+    padding: 0.75rem;
+  }
+  
+  .messages-container {
+    padding: 0.75rem;
+    height: calc(100vh - 130px);
+    max-height: calc(100vh - 130px);
+  }
+  
+  .message-input {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+  
+  .message-input input {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .message-input button {
+    padding: 0.75rem;
+    min-width: 60px;
+  }
+  
+  .username-setup {
+    padding: 1rem;
+    height: 100vh;
+  }
+  
+  .username-setup h1 {
+    font-size: clamp(1.75rem, 6vw, 2.5rem);
+    margin-bottom: 0.75rem;
+  }
+  
+  .username-setup p {
+    font-size: clamp(0.85rem, 2vw, 1.25rem);
+    margin-bottom: 2.5rem;
+  }
+  
+  .username-form {
+    max-width: 95vw;
+    gap: 1rem;
+  }
+  
+  .username-form input {
+    padding: 1rem 1.25rem;
+    font-size: clamp(0.85rem, 1.8vw, 1rem);
+  }
+  
+  .username-form button {
+    padding: 1rem 1.5rem;
+    font-size: clamp(0.85rem, 1.8vw, 1rem);
+  }
+  
+  .firebase-debug {
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    max-width: 95vw;
+  }
+  
+  .message {
+    max-width: 90%;
+  }
+  
+  .message-text {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .welcome-content {
+    padding: 1.25rem 0.75rem;
+    max-width: 90vw;
+  }
+  
+  .welcome-content h2 {
+    font-size: clamp(1.25rem, 4vw, 1.75rem);
+  }
+  
+  .welcome-content p {
+    font-size: clamp(0.85rem, 2.5vw, 1rem);
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+  .sidebar {
+    width: 95vw;
+    min-width: 250px;
+  }
+  
+  .username-setup {
+    padding: 0.75rem;
+  }
+  
+  .username-setup h1 {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    margin-bottom: 0.5rem;
+  }
+  
+  .username-setup p {
+    font-size: clamp(0.8rem, 1.8vw, 1rem);
+    margin-bottom: 2rem;
+  }
+  
+  .username-form {
+    gap: 0.75rem;
+  }
+  
+  .username-form input {
+    padding: 0.875rem 1rem;
+    font-size: clamp(0.8rem, 1.6vw, 0.9rem);
+  }
+  
+  .username-form button {
+    padding: 0.875rem 1.25rem;
+    font-size: clamp(0.8rem, 1.6vw, 0.9rem);
+  }
+  
+  .firebase-debug {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .welcome-content h2 {
+    font-size: clamp(1.125rem, 3.5vw, 1.5rem);
+  }
+  
+  .welcome-content p {
+    font-size: clamp(0.8rem, 2vw, 0.95rem);
+  }
+  
+  .welcome-content {
+    padding: 1rem 0.5rem;
+  }
+  
+  .message-text {
+    font-size: 0.8rem;
+  }
+}
+
+/* Focus Styles */
+*:focus {
+  outline: 2px solid var(--text-accent);
+  outline-offset: 2px;
+}
+
+/* Selection Styles */
+::selection {
+  background: rgba(220, 38, 38, 0.3);
+  color: var(--text-primary);
+}
+
+/* Homepage Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
