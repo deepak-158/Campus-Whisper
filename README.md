@@ -53,7 +53,7 @@ npm install
 
 **Step into the Firebase Console:**
 - Visit the [Firebase Console](https://console.firebase.google.com/) - your gateway to the cloud realm
-- Create a new project or select the existing `vit-chitchat-36032-2bcd8` sanctuary
+- Create a new project or select the existing `vit-chitchat-36032-5dca4` sanctuary
 
 **Claim Your Digital Territory:**
 1. Navigate to Project Settings (⚙️)
@@ -90,7 +90,7 @@ VITE_FIREBASE_MEASUREMENT_ID=your-measurement-id
 4. Select your preferred digital realm location
 
 **Set the Sacred Rules:**
-Navigate to Database → Rules and inscribe these permissions:
+Navigate to Database → Rules and inscribe these enhanced permissions:
 
 ```json
 {
@@ -98,11 +98,46 @@ Navigate to Database → Rules and inscribe these permissions:
     "rooms": {
       "$roomId": {
         ".read": true,
-        ".write": true,
+        ".write": "auth != null || (
+          newData.exists() && 
+          newData.hasChildren(['created', 'createdBy']) ||
+          root.child('rooms/' + $roomId).exists()
+        )",
         "messages": {
           "$messageId": {
-            ".validate": "newData.hasChildren(['text', 'username', 'timestamp']) && newData.child('text').isString() && newData.child('username').isString() && newData.child('timestamp').isNumber()"
+            ".read": true,
+            ".write": "auth != null || (
+              !data.exists() &&
+              newData.hasChildren(['text', 'username', 'timestamp']) && 
+              newData.child('text').isString() && 
+              newData.child('username').isString() && 
+              newData.child('timestamp').isNumber() &&
+              newData.child('text').val().length <= 1000 &&
+              newData.child('username').val().length <= 50 &&
+              newData.child('timestamp').val() > (now - 300000) &&
+              newData.child('timestamp').val() <= now
+            )",
+            ".validate": "
+              newData.hasChildren(['text', 'username', 'timestamp']) &&
+              newData.child('text').isString() &&
+              newData.child('username').isString() &&
+              newData.child('timestamp').isNumber() &&
+              newData.child('text').val().length > 0 &&
+              newData.child('text').val().length <= 1000 &&
+              newData.child('username').val().length > 0 &&
+              newData.child('username').val().length <= 50 &&
+              !newData.hasChild('ip') &&
+              !newData.hasChild('location') &&
+              !newData.hasChild('userAgent') &&
+              !newData.hasChild('platform')
+            "
           }
+        },
+        "created": {
+          ".validate": "newData.isNumber() && newData.val() <= now"
+        },
+        "createdBy": {
+          ".validate": "newData.isString() && newData.val().length <= 50"
         }
       }
     }
@@ -188,6 +223,22 @@ In the realm of Campus Whisper, privacy isn't just a feature—it's a sacred oat
 - **Anonymous by Design** - Even we can't connect messages to individuals  
 - **Temporary Digital Footprints** - Your whispers exist only as long as needed
 - **No Tracking, No Profiling** - You are free from the prying eyes of data miners
+- **Multi-layered Rate Limiting** - Protection against abuse without sacrificing anonymity
+- **Client & Server Security** - Protection at every level of the application
+
+### Quick Firebase Rules Setup
+
+For development, you can start with test mode rules:
+```json
+{
+  "rules": {
+    ".read": true,
+    ".write": true
+  }
+}
+```
+
+⚠️ **Warning**: Test mode allows anyone to read/write. For production, implement proper security rules that validate data and block sensitive information like IP addresses.
 
 ## 🌟 Advanced Incantations (Scripts)
 
@@ -198,7 +249,7 @@ npm run preview  # Glimpse the final creation
 npm run lint     # Purify the code of imperfections
 ```
 
-## � Future Visions
+## 🔮 Future Visions
 
 The whispers speak of features yet to be born:
 - **Voice Modulation** - Audio whispers with digital disguise

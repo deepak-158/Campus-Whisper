@@ -12,6 +12,10 @@
   -khtml-user-drag: none;
   -moz-user-drag: none;
   -o-user-drag: none;
+  /* Prevent IP leakage through CSS */
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
 /* Allow text selection only in input fields and message content */
@@ -22,13 +26,25 @@ input, textarea, .message-text {
   -ms-user-select: text;
 }
 
-/* Prevent image dragging */
+/* Prevent image dragging and IP tracking */
 img {
   -webkit-user-drag: none;
   -khtml-user-drag: none;
   -moz-user-drag: none;
   -o-user-drag: none;
   pointer-events: none;
+  /* Block potential tracking pixels */
+  max-width: 100%;
+  height: auto;
+}
+
+/* Security: Block external resource loading */
+@media print {
+  * {
+    background-image: none !important;
+    background: white !important;
+    color: black !important;
+  }
 }
 
 /* Hide scroll bars for security */
@@ -37,7 +53,7 @@ img {
   background: transparent;
 }
 
-/* Disable text highlighting */
+/* Disable text highlighting for security */
 ::selection {
   background: transparent;
 }

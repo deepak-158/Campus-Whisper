@@ -1,4 +1,6 @@
 // Security utilities to prevent data exposure and protect the application
+import { ipSecurityManager, NetworkSecurity } from './ipSecurity.js';
+
 class SecurityManager {
   constructor() {
     this.init();
@@ -11,6 +13,92 @@ class SecurityManager {
       this.disableKeyboardShortcuts();
       this.preventSelection();
       this.obfuscateConsole();
+    }
+    
+    // Always apply IP protection
+    this.enableIPProtection();
+  }
+
+  // Enable IP protection features
+  enableIPProtection() {
+    // Block potential IP leakage through images
+    this.blockIPLeakageImages();
+    
+    // Override fetch to prevent IP leakage
+    this.secureNetworkRequests();
+    
+    // Block WebRTC IP leakage
+    this.blockWebRTCLeaks();
+  }
+
+  // Block images that might leak IP
+  blockIPLeakageImages() {
+    const originalCreateElement = document.createElement;
+    document.createElement = function(tagName) {
+      const element = originalCreateElement.call(this, tagName);
+      
+      if (tagName.toLowerCase() === 'img') {
+        const originalSrc = element.src;
+        Object.defineProperty(element, 'src', {
+          set: function(value) {
+            // Block suspicious image sources
+            if (value.includes('iplogger') || 
+                value.includes('grabify') || 
+                value.includes('tracking') ||
+                value.match(/^\d+\.\d+\.\d+\.\d+/)) {
+              console.warn('Blocked potentially malicious image source');
+              return;
+            }
+            originalSrc = value;
+          },
+          get: function() {
+            return originalSrc;
+          }
+        });
+      }
+      
+      return element;
+    };
+  }
+
+  // Secure network requests
+  secureNetworkRequests() {
+    const originalFetch = window.fetch;
+    window.fetch = function(url, options = {}) {
+      // Add secure headers
+      const secureOptions = {
+        ...options,
+        headers: {
+          ...NetworkSecurity.getSecureHeaders(),
+          ...(options.headers || {})
+        }
+      };
+      
+      // Sanitize request data
+      if (secureOptions.body && typeof secureOptions.body === 'string') {
+        try {
+          const data = JSON.parse(secureOptions.body);
+          const sanitized = NetworkSecurity.sanitizeRequestData(data);
+          secureOptions.body = JSON.stringify(sanitized);
+        } catch (e) {
+          // Not JSON, leave as is
+        }
+      }
+      
+      return originalFetch.call(this, url, secureOptions);
+    };
+  }
+
+  // Block WebRTC IP leakage
+  blockWebRTCLeaks() {
+    if (window.RTCPeerConnection) {
+      window.RTCPeerConnection = undefined;
+    }
+    if (window.webkitRTCPeerConnection) {
+      window.webkitRTCPeerConnection = undefined;
+    }
+    if (window.mozRTCPeerConnection) {
+      window.mozRTCPeerConnection = undefined;
     }
   }
 

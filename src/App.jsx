@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { database, testConnection } from './firebase'
-import { ref, push, onValue, off } from 'firebase/database'
+import { ref, push, onValue, off, get, set } from 'firebase/database'
 import { setupFirebaseDatabase } from './setupFirebase'
 import { securityManager, DataProtection } from './security'
+import { ipSecurityManager, NetworkSecurity } from './ipSecurity'
 import './App.css'
 
 function App() {
@@ -122,17 +123,42 @@ function App() {
 
   const createRoom = async () => {
     if (newRoomName.trim()) {
+      // Client-side rate limiting
+      if (!ipSecurityManager.isActionAllowed('rooms')) {
+        alert('Rate limit exceeded. Please wait before creating another room.');
+        return;
+      }
+      
       if (firebaseStatus !== 'connected') {
         alert('Firebase connection failed. Please check your configuration.')
         return
       }
       
       try {
+        // Firebase-based rate limiting check
+        const firebaseAllowed = await ipSecurityManager.checkFirebaseRateLimit(database, 'room');
+        if (!firebaseAllowed) {
+          alert('Server rate limit exceeded. Please try again later.');
+          return;
+        }
+        
+        // Check if room already exists
+        const roomsRef = ref(database, 'rooms');
+        const snapshot = await get(roomsRef);
+        const rooms = snapshot.val() || {};
+        
+        if (Object.keys(rooms).includes(newRoomName.trim())) {
+          alert('A room with this name already exists. Please choose a different name.');
+          return;
+        }
+        
         const roomRef = ref(database, `rooms/${newRoomName.trim()}`)
-        await push(roomRef, {
+        const sanitizedData = NetworkSecurity.sanitizeRequestData({
           created: Date.now(),
           createdBy: username
-        })
+        });
+        
+        await set(roomRef, sanitizedData)
         setNewRoomName('')
         securityManager.safeLog('✅ Room created successfully')
       } catch (error) {
@@ -144,18 +170,33 @@ function App() {
 
   const sendMessage = async () => {
     if (message.trim() && currentRoom) {
+      // Client-side rate limiting check
+      if (!ipSecurityManager.isActionAllowed('messages')) {
+        alert('Rate limit exceeded. Please slow down your messaging.');
+        return;
+      }
+      
       if (firebaseStatus !== 'connected') {
         alert('Firebase connection failed. Cannot send message.')
         return
       }
       
       try {
+        // Firebase-based rate limiting check
+        const firebaseAllowed = await ipSecurityManager.checkFirebaseRateLimit(database, 'message');
+        if (!firebaseAllowed) {
+          alert('Server rate limit exceeded. Please try again later.');
+          return;
+        }
+        
         const messagesRef = ref(database, `rooms/${currentRoom}/messages`)
-        await push(messagesRef, {
-          text: message,
+        const sanitizedData = NetworkSecurity.sanitizeRequestData({
+          text: message.trim(),
           username: username,
           timestamp: Date.now()
-        })
+        });
+        
+        await push(messagesRef, sanitizedData)
         setMessage('')
       } catch (error) {
         securityManager.safeError('❌ Error sending message:', error.message)
@@ -224,7 +265,7 @@ function App() {
                 <h4>🔧 Setup Required:</h4>
                 <ol>
                   <li>Go to <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a></li>
-                  <li>Select project: <strong>vit-chitchat-36032-2bcd8</strong></li>
+                  <li>Select project: <strong>vit-chitchat-36032-5dca4</strong></li>
                   <li>Create <strong>Realtime Database</strong> (not Firestore)</li>
                   <li>Start in <strong>test mode</strong></li>
                   <li>Set rules to allow read/write</li>

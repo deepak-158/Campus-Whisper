@@ -4,7 +4,7 @@ import { getDatabase } from 'firebase/database';
 import { DataProtection } from './security.js';
 
 // Your web app's Firebase configuration
-// Using environment variables for security
+// Using environment variables for security (NEVER hardcode these values)
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
