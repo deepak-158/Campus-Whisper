@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { database, testConnection } from './firebase'
 import { ref, push, onValue, off } from 'firebase/database'
 import { setupFirebaseDatabase } from './setupFirebase'
+import { securityManager, DataProtection } from './security'
 import './App.css'
 
 function App() {
@@ -64,18 +65,29 @@ function App() {
     const unsubscribe = onValue(roomsRef, (snapshot) => {
       const data = snapshot.val()
       if (data) {
-        setRooms(Object.keys(data))
+        const roomList = Object.keys(data)
+        securityManager.safeLog('🏠 Rooms updated:', roomList.length, 'rooms')
+        securityManager.safeLog('🔍 Current room before update:', currentRoom)
+        setRooms(roomList)
+        // Don't change currentRoom here - let user control room selection
       } else {
+        securityManager.safeLog('🏠 No rooms found, clearing list')
         setRooms([])
+        // Only clear currentRoom if the current room no longer exists
+        if (currentRoom) {
+          securityManager.safeLog('⚠️ Current room cleared because no rooms exist')
+          setCurrentRoom('')
+        }
       }
     })
 
     return () => off(roomsRef, 'value', unsubscribe)
-  }, [])
+  }, []) // Remove currentRoom from dependency array
 
   // Load messages for current room
   useEffect(() => {
     if (currentRoom) {
+      securityManager.safeLog('💬 Setting up message listener for room')
       const messagesRef = ref(database, `rooms/${currentRoom}/messages`)
       const unsubscribe = onValue(messagesRef, (snapshot) => {
         const data = snapshot.val()
@@ -84,13 +96,21 @@ function App() {
             id: key,
             ...data[key]
           })).sort((a, b) => a.timestamp - b.timestamp)
+          securityManager.safeLog('📨 Messages updated:', messageList.length, 'messages')
           setMessages(messageList)
         } else {
+          securityManager.safeLog('📭 No messages found for current room')
           setMessages([])
         }
       })
 
-      return () => off(messagesRef, 'value', unsubscribe)
+      return () => {
+        securityManager.safeLog('🔇 Cleaning up message listener')
+        off(messagesRef, 'value', unsubscribe)
+      }
+    } else {
+      securityManager.safeLog('🚫 No current room, clearing messages')
+      setMessages([])
     }
   }, [currentRoom])
 
@@ -114,9 +134,9 @@ function App() {
           createdBy: username
         })
         setNewRoomName('')
-        console.log('✅ Room created successfully:', newRoomName.trim())
+        securityManager.safeLog('✅ Room created successfully')
       } catch (error) {
-        console.error('❌ Error creating room:', error)
+        securityManager.safeError('❌ Error creating room:', error.message)
         alert(`Failed to create room: ${error.message}`)
       }
     }
@@ -138,13 +158,14 @@ function App() {
         })
         setMessage('')
       } catch (error) {
-        console.error('❌ Error sending message:', error)
+        securityManager.safeError('❌ Error sending message:', error.message)
         alert(`Failed to send message: ${error.message}`)
       }
     }
   }
 
   const joinRoom = (roomName) => {
+    securityManager.safeLog('🚪 Room selection changed')
     setCurrentRoom(roomName)
     setMessages([])
   }
@@ -257,7 +278,6 @@ function App() {
               placeholder="Enter room name..."
               value={newRoomName}
               onChange={(e) => {
-                console.log('Room name input changed:', e.target.value)
                 setNewRoomName(e.target.value)
               }}
               onKeyPress={(e) => e.key === 'Enter' && createRoom()}

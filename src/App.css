@@ -1,5 +1,51 @@
 /* Versacc AI Chat - Modern Dark Theme */
 
+/* Security CSS - Prevent content inspection and selection */
+* {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+}
+
+/* Allow text selection only in input fields and message content */
+input, textarea, .message-text {
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
+/* Prevent image dragging */
+img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  pointer-events: none;
+}
+
+/* Hide scroll bars for security */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* Disable text highlighting */
+::selection {
+  background: transparent;
+}
+
+::-moz-selection {
+  background: transparent;
+}
+
 /* Reset and Base Styles */
 * {
   margin: 0;

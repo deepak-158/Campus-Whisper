@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
+import { DataProtection } from './security.js';
 
 // Your web app's Firebase configuration
 // Using environment variables for security
@@ -23,11 +24,17 @@ try {
   app = initializeApp(firebaseConfig);
   database = getDatabase(app);
   
-  console.log('🔥 Firebase initialized successfully!');
-  console.log('📊 Database URL:', firebaseConfig.databaseURL);
+  // Only log in development mode with obfuscated data
+  if (import.meta.env.DEV) {
+    console.log('🔥 Firebase initialized successfully!');
+    console.log('📊 Project ID:', firebaseConfig.projectId);
+    console.log('🔑 API Key:', DataProtection.obfuscateApiKey(firebaseConfig.apiKey));
+  }
 } catch (error) {
-  console.error('❌ Firebase initialization failed:', error);
-  console.error('� Please check your Firebase configuration');
+  // Only log errors in development
+  if (import.meta.env.DEV) {
+    console.error('❌ Firebase initialization failed:', error.message);
+  }
 }
 
 export { database };
