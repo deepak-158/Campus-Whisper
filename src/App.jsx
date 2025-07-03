@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { database, testConnection } from './firebase'
 import { ref, push, onValue, off, get, set } from 'firebase/database'
 import { setupFirebaseDatabase } from './setupFirebase'
@@ -17,6 +17,7 @@ function App() {
   const [firebaseStatus, setFirebaseStatus] = useState('connecting')
   const [setupMessage, setSetupMessage] = useState('')
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768)
+  const messagesEndRef = useRef(null)
 
   // Test Firebase connection on component mount
   useEffect(() => {
@@ -114,6 +115,15 @@ function App() {
       setMessages([])
     }
   }, [currentRoom])
+
+  // Scroll to bottom when messages change
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
 
   const handleSetUsername = () => {
     if (username.trim()) {
@@ -361,7 +371,7 @@ function App() {
 
         <div className="sidebar-app-promotion">
           <div className="mini-app-card">
-            <h4>� VIT Campus Connect</h4>
+            <h4>🌙 VIT Campus Connect</h4>
             <p>Late night cravings? Buy from your blockmates!</p>
             <a href="https://vit-campus-connect.vercel.app/" target="_blank" rel="noopener noreferrer" className="mini-app-link">
               Order Now →
@@ -404,6 +414,7 @@ function App() {
                   </div>
                 ))
               )}
+              <div ref={messagesEndRef} />
             </div>
 
             <div className="message-input">
@@ -418,6 +429,7 @@ function App() {
                 onKeyPress={handleKeyPress}
               />
               <button onClick={sendMessage} disabled={!message.trim()}>
+                Send
               </button>
             </div>
           </>
