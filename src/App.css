@@ -279,58 +279,77 @@ html, body {
   text-decoration: underline;
 }
 
+/* Username Form Styles */
 .username-form {
   display: flex;
   flex-direction: column;
-  gap: clamp(0.75rem, 2vh, 1.25rem);
-  max-width: min(500px, 90vw);
+  gap: clamp(1rem, 2.5vh, 1.5rem);
   width: 100%;
+  max-width: min(500px, 90vw);
   position: relative;
   z-index: 2;
 }
 
 .username-form input {
-  padding: clamp(0.75rem, 2vw, 1rem) clamp(1rem, 3vw, 1.5rem);
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  padding: clamp(1rem, 2.5vw, 1.25rem) clamp(1.5rem, 3.5vw, 2rem);
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  font-size: clamp(0.9rem, 2vw, 1rem);
-  outline: none;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(20px);
-  text-align: center;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-}
-
-.username-form input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-primary);
+  font-size: clamp(1rem, 2.2vw, 1.125rem);
   font-weight: 400;
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+  outline: none;
+  letter-spacing: 0.02em;
 }
 
 .username-form input:focus {
-  border-color: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
-  transform: translateY(-3px);
-  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--text-accent);
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+  transform: translateY(-1px);
+}
+
+.username-form input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
 }
 
 .username-form button {
-  padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2rem);
+  padding: clamp(1rem, 2.5vw, 1.25rem) clamp(2rem, 4vw, 2.5rem);
+  background: linear-gradient(135deg, var(--text-accent), #b91c1c);
+  color: white;
   border: none;
   border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  font-size: clamp(0.9rem, 2vw, 1rem);
+  font-size: clamp(1rem, 2.2vw, 1.125rem);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  backdrop-filter: blur(20px);
-  border: 2px solid rgba(255, 255, 255, 0.3);
   position: relative;
   overflow: hidden;
-  letter-spacing: 0.01em;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 4px 20px rgba(220, 38, 38, 0.3);
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.username-form button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #b91c1c, #991b1b);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(220, 38, 38, 0.4);
+}
+
+.username-form button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 4px 20px rgba(220, 38, 38, 0.3);
+}
+
+.username-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 10px rgba(220, 38, 38, 0.2);
 }
 
 .username-form button::before {
@@ -348,16 +367,141 @@ html, body {
   left: 100%;
 }
 
-.username-form button:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-xl);
-  border-color: rgba(255, 255, 255, 0.5);
+/* VIT Campus Connect Floating Suggestion */
+.floating-app-suggestion {
+  position: absolute;
+  top: 20%;
+  right: 5%;
+  z-index: 1;
+  opacity: 0.8;
+  animation: float 3s ease-in-out infinite;
 }
 
-.username-form button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.cloud-box {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  max-width: 200px;
+  position: relative;
+}
+
+.cloud-box::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 15px;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  backdrop-filter: blur(15px);
+}
+
+.cloud-box:hover {
+  transform: translateY(-2px);
+  opacity: 1;
+  box-shadow: 0 6px 25px rgba(220, 38, 38, 0.2);
+  border-color: rgba(220, 38, 38, 0.3);
+}
+
+.cloud-emoji {
+  font-size: 1.2rem;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+}
+
+.suggestion-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.suggestion-text {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.suggestion-link {
+  font-size: 0.7rem;
+  color: #dc2626;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.suggestion-link:hover {
+  color: #f87171;
+  text-decoration: underline;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Hide on very small screens */
+@media (max-width: 480px) {
+  .floating-app-suggestion {
+    display: none;
+  }
+}
+
+/* Sidebar App Promotion Styles */
+.sidebar-app-promotion {
+  margin-top: auto;
+  padding: 1rem 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mini-app-card {
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  text-align: center;
+}
+
+.mini-app-card h4 {
+  color: #dc2626;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.mini-app-card p {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.mini-app-link {
+  display: inline-block;
+  background: #dc2626;
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.mini-app-link:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
 }
 
 /* Sidebar - Versacc Style */
@@ -1334,14 +1478,6 @@ html, body {
   
   .welcome-content p {
     font-size: clamp(0.8rem, 2vw, 0.95rem);
-  }
-  
-  .welcome-content {
-    padding: 1rem 0.5rem;
-  }
-  
-  .message-text {
-    font-size: 0.8rem;
   }
 }
 

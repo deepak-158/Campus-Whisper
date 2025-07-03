@@ -240,6 +240,20 @@ For development, you can start with test mode rules:
 
 ⚠️ **Warning**: Test mode allows anyone to read/write. For production, implement proper security rules that validate data and block sensitive information like IP addresses.
 
+## 🌐 Explore More Campus Magic
+
+While you're exploring the world of campus connections, check out our sister project:
+
+### 🌙 VIT Campus Connect
+Got night cravings? Need supplies delivered to your hostel? **VIT Campus Connect** connects students for peer-to-peer campus deliveries:
+- 🏠 **Hostellers** can request food, supplies, or services  
+- 🚶 **Day scholars** can earn money by fulfilling requests during campus visits
+- 💬 **Everyone benefits** from a trusted, real-time student marketplace
+
+**🔗 [Try VIT Campus Connect](https://vit-campus-connect.vercel.app/)**
+
+---
+
 ## 🌟 Advanced Incantations (Scripts)
 
 ```bash

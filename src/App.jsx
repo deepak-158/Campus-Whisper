@@ -257,6 +257,19 @@ function App() {
         <div className="username-setup">
           <h1>🎭 Campus Whisper</h1>
           <p>Anonymous Chat Rooms</p>
+          
+          <div className="floating-app-suggestion">
+            <div className="cloud-box">
+              <span className="cloud-emoji">🌙</span>
+              <div className="suggestion-content">
+                <span className="suggestion-text">Night cravings?</span>
+                <a href="https://vit-campus-connect.vercel.app/" target="_blank" rel="noopener noreferrer" className="suggestion-link">
+                  Buy from blockmates
+                </a>
+              </div>
+            </div>
+          </div>
+          
           <div className="firebase-debug">
             <div>Firebase Status: {firebaseStatus}</div>
             <div>{setupMessage}</div>
@@ -344,6 +357,16 @@ function App() {
               </div>
             ))
           )}
+        </div>
+
+        <div className="sidebar-app-promotion">
+          <div className="mini-app-card">
+            <h4>� VIT Campus Connect</h4>
+            <p>Late night cravings? Buy from your blockmates!</p>
+            <a href="https://vit-campus-connect.vercel.app/" target="_blank" rel="noopener noreferrer" className="mini-app-link">
+              Order Now →
+            </a>
+          </div>
         </div>
       </div>
 
